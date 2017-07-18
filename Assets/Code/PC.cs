@@ -41,10 +41,12 @@ public class PC : MonoBehaviour
     public GameObject sword;
 
     public AudioSource pew;
+    Animator animHead;
 
     // Use this for initialization
     void Start()
     {
+        animHead = transform.GetChild(0).GetComponent<Animator>();
         attackMode = 0;
         swordTime = 0;
         bulletTime = 0;
@@ -53,6 +55,7 @@ public class PC : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AnimationHandler();
         Move();
         AttackMode();
         Attack();
@@ -70,7 +73,6 @@ public class PC : MonoBehaviour
     {
         swordTime -= Time.deltaTime;
         bulletTime -= Time.deltaTime;
-        Debug.Log(bulletTime);
 
         switch (attackMode)
         {
@@ -137,6 +139,7 @@ public class PC : MonoBehaviour
             direction.dir.y = 1;
             direction.zero = false;
             direction.d = "up";
+            
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -156,13 +159,27 @@ public class PC : MonoBehaviour
             direction.zero = false;
             direction.d = "left";
         }
-
+        //ANIMACAO CABECA
+        if(Input.GetKeyDown(KeyCode.LeftArrow)){
+            Debug.Log("OI");
+            animHead.SetFloat("hor",1);
+            animHead.SetFloat("ver",0);
+        }else if(Input.GetKeyDown(KeyCode.UpArrow)){
+            animHead.SetFloat("hor",0);
+            animHead.SetFloat("ver",1);
+        }else if(Input.GetKeyDown(KeyCode.DownArrow)){
+            animHead.SetFloat("hor",0);
+            animHead.SetFloat("ver",-1);
+        }else if(Input.GetKeyDown(KeyCode.RightArrow)){
+            animHead.SetFloat("hor",-1);
+            animHead.SetFloat("ver",0);
+        }
         return direction;
     }
 
     private void ShotRelease(Direction direction)
     {
-        pew.Play();
+        //pew.Play();
         bulletTime = bulletCooldown;
         GameObject b = Instantiate(bullet);
 		GameObject.Destroy(b, bulletDestroyTime);
@@ -192,5 +209,39 @@ public class PC : MonoBehaviour
         dashed = true;
         yield return new WaitForSeconds(dashCooldown);
         dashed = false;
+    }
+    private void AnimationHandler(){
+        float hor = Input.GetAxisRaw("Horizontal");
+        float ver = Input.GetAxisRaw("Vertical");
+        Animator myAnimator = GetComponent<Animator>();
+
+        myAnimator.SetBool("moving", !(hor == 0 && ver == 0));
+        //BODY
+        if(Mathf.Abs(hor) > Mathf.Abs(ver)){
+            if(hor > 0){
+                myAnimator.SetFloat("hor",1);
+                myAnimator.SetFloat("ver",0);
+                animHead.SetFloat("hor",1);
+                animHead.SetFloat("ver",0);
+            }else{
+                myAnimator.SetFloat("hor",-1);
+                myAnimator.SetFloat("ver",0);
+                animHead.SetFloat("hor",-1);
+                animHead.SetFloat("ver",0);
+            }
+        }else{
+            if(ver > 0){
+                myAnimator.SetFloat("hor",0);
+                myAnimator.SetFloat("ver",1);
+                animHead.SetFloat("hor",0);
+                animHead.SetFloat("ver",1);
+            }else{
+                myAnimator.SetFloat("hor",0);
+                myAnimator.SetFloat("ver",-1);
+                animHead.SetFloat("hor",0);
+                animHead.SetFloat("ver",-1);
+            }
+        }
+
     }
 }
