@@ -52,9 +52,10 @@ public class PlayerMovement : MonoBehaviour {
 	private void UsePhysicsProperties(){
 		myRB2D.drag = linearDrag;
 	}
-	private void GetLastDirection(){
+	public Vector2 GetLastDirection(){
 		if(new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).magnitude != 0){
 			lastDirection = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).normalized;
 		}
+		return lastDirection;
 	}
 }

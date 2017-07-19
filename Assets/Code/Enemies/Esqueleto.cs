@@ -14,6 +14,7 @@ public class Esqueleto : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         arrowC = 0;
+        player = GameObject.Find("Player");
 	}
 	
 	// Update is called once per frame
@@ -28,7 +29,6 @@ public class Esqueleto : MonoBehaviour {
         Vector3 vectorD = target.transform.position - transform.position;
         float distance = vectorD.magnitude;
         Vector3 direction = vectorD.normalized;
-        Debug.Log(distance);
 
         if(distance <= rangedAggroDistance && arrowC >= arrowCooldown)
         {

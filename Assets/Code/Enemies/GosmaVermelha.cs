@@ -21,6 +21,7 @@ public class GosmaVermelha : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        target = GameObject.Find("Player");
         timer = 0;
         currentHP = maxHP;
 	}
