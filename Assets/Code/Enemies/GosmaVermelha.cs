@@ -15,7 +15,7 @@ public class GosmaVermelha : MonoBehaviour {
     private float timer;
 
     public float maxHP;
-    private float currentHP;
+    [SerializeField]private float currentHP;
 
 	// Use this for initialization
 	void Start () {
@@ -57,10 +57,9 @@ public class GosmaVermelha : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("triggered");
-        if (collision.gameObject.name == "Sword")
+        if (collision.gameObject.CompareTag("Weapon"))
         {
-            TakeDamage(target.GetComponent<PC>().swordDamage, knockbackDistance * 10f);
+            TakeDamage(collision.gameObject.GetComponent<IWeapon>().GetWeaponDamage(), knockbackDistance * 10f);
         }
     }
 

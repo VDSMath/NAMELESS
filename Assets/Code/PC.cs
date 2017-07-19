@@ -42,6 +42,7 @@ public class PC : MonoBehaviour
 
     public AudioSource pew;
     Animator animHead;
+    bool changedView;
 
     // Use this for initialization
     void Start()
