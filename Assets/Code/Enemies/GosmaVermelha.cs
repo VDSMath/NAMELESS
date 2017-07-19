@@ -5,19 +5,14 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class GosmaVermelha : MonoBehaviour {
+public class GosmaVermelha : IEnemy {
 
     
-    [SerializeField]private float moveDistance, knockbackDistance, timeBetweenCrawls;
+    [SerializeField]private float moveDistance, timeBetweenCrawls;
     [SerializeField]private GameObject target;
-    [SerializeField]
-    private int damage;
 
 
-    private float timer;
-
-    public float maxHP;
-    [SerializeField]private float currentHP;
+    private float timer;                        
 
 	// Use this for initialization
 	void Start () {
@@ -51,40 +46,9 @@ public class GosmaVermelha : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Bullet")
-        {
-            GameObject.Destroy(collision.gameObject);
-            TakeDamage(target.GetComponent<PC>().bulletDamage, knockbackDistance * 0.1f);
-        }
-
         if(collision.gameObject.name == "Player")
         {
-            collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockbackDistance, damage);
+            collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockback, damage);
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Weapon"))
-        {
-            TakeDamage(collision.gameObject.GetComponent<IWeapon>().GetWeaponDamage(), knockbackDistance * 10f);
-        }
-    }
-
-    private void TakeDamage(float amount, float knockback)
-    {
-        Vector2 knockbackV = -transform.up.normalized;
-        GetComponent<Rigidbody2D>().AddForce(knockbackV * knockback);
-        currentHP -= amount;
-
-        if (currentHP <= 0)
-        {
-            Kill();
-        }
-    }
-
-    private void Kill()
-    {
-        gameObject.SetActive(false);
-    }
+    }     
 }

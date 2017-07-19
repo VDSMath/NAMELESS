@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Esqueleto : MonoBehaviour {
+public class Esqueleto : IEnemy {
 
     [SerializeField]
     private GameObject player, arrow;
 
     [SerializeField]
-    private float arrowCooldown, arrowDamage, arrowSpeed, rangedAggroDistance;
+    private float arrowCooldown, arrowSpeed, rangedAggroDistance;
     private float arrowC;
 
 	// Use this for initialization
@@ -50,7 +50,7 @@ public class Esqueleto : MonoBehaviour {
         GameObject temp = Instantiate(arrow, transform.position, Quaternion.identity);
         temp.GetComponent<Rigidbody2D>().AddForce(arrowSpeed * direction);
         temp.transform.up = transform.up;
-        temp.GetComponent<Arrow>().SetShootingDamage(arrowDamage);
+        temp.GetComponent<Arrow>().SetShootingDamage(damage);
 
         LookAt2D(temp, player);
 

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EspinhoRolador : MonoBehaviour {
+public class EspinhoRolador : IEnemy {
 
-    public int tipo, damage;
+    public int tipo;
 
     [SerializeField]
-    private float knockback, speed;
+    private float speed;
 
 	// Use this for initialization
 	void Start () {

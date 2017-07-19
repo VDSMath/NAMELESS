@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerArrow : MonoBehaviour,IWeapon {
 
-	[Header("Animation Properties")]
+    [Header("Animation Properties")]
+    [SerializeField] private float knockbackForce;
 	[SerializeField] private int shootingDrag;
 	[SerializeField] private float shootingSpeed;
-	[SerializeField] private float shootingDamage;
+	[SerializeField] private int shootingDamage;
 	[SerializeField] private float shootingCoolDown;
 	[SerializeField] private GameObject arrow;
 	private bool canShoot = true;
@@ -37,7 +38,11 @@ public class PlayerArrow : MonoBehaviour,IWeapon {
 	private void GetArrowDirection(){
 		transform.up = (Vector3) GetComponentInParent<PlayerMovement>().lastDirection;
 	}
-	public float GetWeaponDamage(){
+	public int GetWeaponDamage(){
 		return shootingDamage;
 	}
+    public float GetKnockback()
+    {
+        return knockbackForce;
+    }
 }

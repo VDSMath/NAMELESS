@@ -10,7 +10,8 @@ public class PlayerSword : MonoBehaviour, IWeapon {
 	[Header("Animation Properties")]
 	[SerializeField] private int attackDuration;
 	[SerializeField] private float attackSpeed;
-	[SerializeField] private float swordDamage;
+	[SerializeField] private int swordDamage;
+    [SerializeField] private float knockbackForce;
 	private bool attacking;
 
 	private void Update(){
@@ -39,7 +40,12 @@ public class PlayerSword : MonoBehaviour, IWeapon {
 			transform.up = (Vector3) GetComponentInParent<PlayerMovement>().lastDirection;
 		}
 	}
-	public float GetWeaponDamage(){
+	public int GetWeaponDamage(){
 		return swordDamage;
 	}
+    
+    public float GetKnockback()
+    {
+        return knockbackForce;
+    }
 }

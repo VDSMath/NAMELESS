@@ -1,3 +1,4 @@
 ﻿public interface IWeapon{
-	float GetWeaponDamage();
+	int GetWeaponDamage();
+    float GetKnockback();
 }

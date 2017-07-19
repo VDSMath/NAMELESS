@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Arrow : MonoBehaviour,IWeapon {
-	private float shootingDamage;
-
+    private int shootingDamage;
+   
     [SerializeField]
-    private float knockback;
+    private float knockbackForce;
     [SerializeField]
     private int damage;
 
-	public void SetShootingDamage(float shootingD){
+    
+
+	public void SetShootingDamage(int shootingD){
 		shootingDamage = shootingD;
 	}
-	public float GetWeaponDamage(){
+	public int GetWeaponDamage(){
 		return shootingDamage;
 	}
+
+    public float GetKnockback()
+    {
+        return knockbackForce;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name == "Player")
         {
-            collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockback, damage);
-        }
-        if(collision.gameObject.tag == "Enemy")
-        {
-
+            collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockbackForce, damage);
         }
     }
 }
