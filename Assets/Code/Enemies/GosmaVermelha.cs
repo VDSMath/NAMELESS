@@ -10,6 +10,8 @@ public class GosmaVermelha : MonoBehaviour {
     
     [SerializeField]private float moveDistance, knockbackDistance, timeBetweenCrawls;
     [SerializeField]private GameObject target;
+    [SerializeField]
+    private int damage;
 
 
     private float timer;
@@ -52,6 +54,11 @@ public class GosmaVermelha : MonoBehaviour {
         {
             GameObject.Destroy(collision.gameObject);
             TakeDamage(target.GetComponent<PC>().bulletDamage, knockbackDistance * 0.1f);
+        }
+
+        if(collision.gameObject.name == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockbackDistance, damage);
         }
     }
 

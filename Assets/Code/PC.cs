@@ -44,6 +44,10 @@ public class PC : MonoBehaviour
     Animator animHead;
     bool changedView;
 
+    [SerializeField]
+    private float maxHP;
+    private float currentHP;
+
     // Use this for initialization
     void Start()
     {
@@ -51,6 +55,7 @@ public class PC : MonoBehaviour
         attackMode = 0;
         swordTime = 0;
         bulletTime = 0;
+        currentHP = maxHP;
     }
 
     // Update is called once per frame
@@ -60,6 +65,23 @@ public class PC : MonoBehaviour
         Move();
         AttackMode();
         Attack();
+    }
+
+    public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
+    {
+        Vector2 knockbackDirection = dealer.transform.position - transform.position;
+        GetComponent<Rigidbody2D>().AddForce(knockbackDirection.normalized * knockbackDistance);
+        currentHP -= damageAmount;
+
+        if(currentHP <= 0)
+        {
+            Death();
+        }
+    }
+
+    private void Death()
+    {
+        gameObject.SetActive(false);
     }
 
     private void AttackMode()

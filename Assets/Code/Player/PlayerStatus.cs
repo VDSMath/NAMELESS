@@ -37,13 +37,24 @@ public class PlayerStatus : MonoBehaviour {
 	private void Update(){
 		ChangeMainItem();
 	}
-	public void LoseLife(){
-		if(actualLife-1 > 0){
-			sliderHP.value = --actualLife;
-		}else{
-			GameOver();
-		}
-	}
+
+    public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
+    {
+        Vector2 knockbackDirection = dealer.transform.position - transform.position;
+        GetComponent<Rigidbody2D>().AddForce(-knockbackDirection.normalized * knockbackDistance);
+        actualLife -= damageAmount;
+
+        if (actualLife - 1 >= 0)
+        {
+            sliderHP.value = --actualLife;
+        }
+        else
+        {
+            GameOver();
+        }
+    }
+
+    
 	public void LoseEnergy(){
 		if(actualEnergy-1 >= 0){
 			sliderENE.value = --actualEnergy;
