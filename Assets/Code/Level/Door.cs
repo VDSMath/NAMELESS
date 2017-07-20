@@ -52,7 +52,7 @@ public class Door : MonoBehaviour,IInteractable {
 		ChangeCameraPosition();
 	}
 	private void GetCamera(){
-		mainCamera = GameObject.Find("Main Camera");
+        mainCamera = Camera.main.gameObject;
 	}
 	private void ChangeCameraPosition(){
 		Vector2 direction;

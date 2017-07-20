@@ -7,8 +7,7 @@ public class EsqueletoArmado : IEnemy {
     private Vector2 moveDirection, moveTarget;
     private float moveDistance, startTime, journeyLength;
     private bool canMove;
-
-    [SerializeField]
+    
     private GameObject player;
 
     [SerializeField]
@@ -22,6 +21,7 @@ public class EsqueletoArmado : IEnemy {
         aggro = false;
         canMove = false;
         timer = 0;
+        player = GameObject.Find("Player");
 	}
 	
 	// Update is called once per frame
@@ -85,7 +85,7 @@ public class EsqueletoArmado : IEnemy {
             {
                 
                 startTime = Time.time;
-                moveTarget = (Vector2)transform.position + (moveDirection * moveDistance);
+                moveTarget = (Vector2)transform.position + (moveDirection * (moveDistance - 1));
                 journeyLength = Vector3.Distance(transform.position, moveTarget);
                 canMove = true;
             }

@@ -20,8 +20,16 @@ public class PlayerInteractor : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Q)){
 
 			RaycastHit2D ray = Physics2D.Raycast(transform.position,direction,interactDistance);
-			if(ray.collider != null && ray.collider.gameObject.GetComponent<IInteractable>() != null){
-				ray.collider.gameObject.GetComponent<IInteractable>().Interact();
+			if(ray.collider != null) {
+                if (ray.collider.gameObject.GetComponent<IInteractable>() != null)
+                {
+                    ray.collider.gameObject.GetComponent<IInteractable>().Interact();
+                }
+
+                if(ray.collider.gameObject.GetComponent<AObservable>() != null)
+                {
+                    ray.collider.gameObject.GetComponent<AObservable>().Observe();
+                }
 			}
 
 		}

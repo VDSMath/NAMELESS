@@ -30,5 +30,7 @@ public class Arrow : MonoBehaviour,IWeapon {
         {
             collision.gameObject.GetComponent<PlayerStatus>().TakeDamage(gameObject, knockbackForce, damage);
         }
+
+        GameObject.Destroy(this.gameObject);
     }
 }
