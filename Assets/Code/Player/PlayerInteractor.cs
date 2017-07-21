@@ -9,10 +9,17 @@ public class PlayerInteractor : MonoBehaviour {
 
 	[Header("Interact Preferences")]
 	[SerializeField] private float interactDistance;
-	
+
+    [HideInInspector]
+    public bool canObserve;
 	private Vector2 direction;
 
-	private void Update(){
+    private void Start()
+    {
+        canObserve = true; 
+    }
+
+    private void Update(){
 		GetNewDirection();
 		InteractFromInput();
 	}
@@ -26,9 +33,11 @@ public class PlayerInteractor : MonoBehaviour {
                     ray.collider.gameObject.GetComponent<IInteractable>().Interact();
                 }
 
-                if(ray.collider.gameObject.GetComponent<AObservable>() != null)
+                if(ray.collider.gameObject.GetComponent<AObservable>() != null && canObserve)
                 {
-                    ray.collider.gameObject.GetComponent<AObservable>().Observe();
+                    canObserve = false;
+                    ray.collider.gameObject.GetComponent<AObservable>().Observe(gameObject);
+                    gameObject.GetComponent<PlayerMovement>().canMove = false;
                 }
 			}
 
@@ -37,7 +46,5 @@ public class PlayerInteractor : MonoBehaviour {
 	private void GetNewDirection(){
 		direction = GetComponent<PlayerMovement>().GetLastDirection();
 	}
-
-
 	
 }

@@ -21,15 +21,22 @@ public class PlayerMovement : MonoBehaviour {
 	private Rigidbody2D myRB2D;
 	private PlayerStatus myPS;
 
+    [HideInInspector]
+    public bool canMove;
+
 	private void Start(){
+        canMove = true;
 		GetRigidbody();
 		GetPlayerStatus();
 		UsePhysicsProperties();
 	}
 	private void FixedUpdate(){
-		Walking();
-		Dash();
-		GetLastDirection();
+        if (canMove)
+        {
+            Walking();
+            Dash();
+            GetLastDirection();
+        }
 	}
 	private void Walking(){
 		Vector2 direction = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).normalized;
