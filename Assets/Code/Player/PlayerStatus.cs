@@ -53,7 +53,6 @@ public class PlayerStatus : MonoBehaviour {
             GameOver();
         }
     }
-
     
 	public void LoseEnergy(){
 		if(actualEnergy-1 >= 0){
