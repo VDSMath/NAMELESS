@@ -125,6 +125,8 @@ public class LoadingScreenManager : MonoBehaviour {
         particles.gameObject.SetActive(true);
 		loadingIcon.gameObject.SetActive(true);
 		loadingDoneIcon.gameObject.SetActive(false);
+        loadingText.gameObject.SetActive(true);
+        progressBar.gameObject.SetActive(true);
 
 		progressBar.fillAmount = 0f;
 		loadingText.text = "LOADING...";
