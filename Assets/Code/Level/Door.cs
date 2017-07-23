@@ -94,9 +94,6 @@ public class Door : MonoBehaviour,IInteractable {
     }
     void Move()
     {
-        Debug.Log(mainCamera.transform.position);
-        Debug.Log(target);
-        
         float distCovered = (Time.time - startTime) * moveSpeed;
         float fracJourney = distCovered / journeyLength;
         mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, fracJourney);
