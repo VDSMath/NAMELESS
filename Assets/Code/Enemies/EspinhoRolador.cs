@@ -12,6 +12,7 @@ public class EspinhoRolador : IEnemy {
 	// Use this for initialization
 	void Start () {
         Vector2 frce;
+
         switch (tipo)
         {
             case 0:

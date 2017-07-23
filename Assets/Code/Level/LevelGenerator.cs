@@ -77,7 +77,6 @@ public class LevelGenerator : MonoBehaviour {
 								  Quaternion.identity,
 								  transform);
 		rooms.Add(temp_go);
-		Debug.Log("INSTANCIA_SIDE_ROOM");
 	}
 	private void GetRoomSize(){
 		roomSize = mainRoom.GetComponent<SpriteRenderer>().size*mainRoom.transform.localScale.x;
