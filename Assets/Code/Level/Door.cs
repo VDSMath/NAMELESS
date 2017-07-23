@@ -9,15 +9,28 @@ public class Door : MonoBehaviour,IInteractable {
 
 	[SerializeField]private Direction myDir;
 	[SerializeField]private Door otherDoor;
-	private GameObject mainCamera;
+    private float moveSpeed = 10f;
+    private GameObject mainCamera;
+
+    private bool canMove;
+    private Vector3 target;
+    private float startTime, journeyLength;
 
 	const float rayDistance = 5f;
 
 	private void Start(){
+        canMove = false;
 		GetCamera();
 		ExistDoor();
 	}
-	private void ExistDoor(){
+    private void Update()
+    {
+        if (canMove)
+        {
+            Move();
+        }
+    }
+    private void ExistDoor(){
 		Vector2 origin = transform.position;
 		Vector2 direction;
 
@@ -73,6 +86,26 @@ public class Door : MonoBehaviour,IInteractable {
 				direction = Vector2.up*LevelGenerator.roomSize.y;
 				break;
 		}
-		mainCamera.transform.position += (Vector3)direction;
-	}
+
+		target = mainCamera.transform.position + (Vector3)direction;
+        startTime = Time.time;
+        journeyLength = Vector3.Distance(mainCamera.transform.position, target);
+        canMove = true;
+    }
+    void Move()
+    {
+        Debug.Log(mainCamera.transform.position);
+        Debug.Log(target);
+        
+        float distCovered = (Time.time - startTime) * moveSpeed;
+        float fracJourney = distCovered / journeyLength;
+        mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, fracJourney);
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -10);
+
+        if (fracJourney >= 0.9f)
+        {
+            mainCamera.transform.position = target;
+            canMove = false;
+        }
+    }
 }
