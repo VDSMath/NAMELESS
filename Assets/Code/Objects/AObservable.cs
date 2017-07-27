@@ -25,6 +25,9 @@ abstract public class AObservable : MonoBehaviour {
         canMove = false;
         canMoveBack = false;
         moveBack = false;
+
+        textBackground = transform.parent.Find("Canvas").transform.Find("Observar - Text Box").gameObject.GetComponent<Image>();
+        textBox = textBackground.transform.Find("Texto").gameObject.GetComponentInChildren<Text>();
     }
 
     private void Update()
@@ -58,8 +61,7 @@ abstract public class AObservable : MonoBehaviour {
 
     public void Observe(GameObject observerT)
     {
-
-        textBackground.gameObject.SetActive(false);
+        textBackground.gameObject.SetActive(true);
         textBox.text = observeText.text;
         observer = observerT;
         observer.GetComponent<PlayerInteractor>().canObserve = false;
