@@ -12,8 +12,8 @@ public class LevelGenerator : MonoBehaviour {
 
 	[Header("Dungeon Tiles")]
 	[SerializeField] private List<GameObject> obstacleTiles;
-	[SerializeField] private GameObject mainRoom;
-	[SerializeField] private GameObject sideRoom;
+	[SerializeField] private List<GameObject> mainRoom;
+	[SerializeField] private List<GameObject> sideRoom;
 	[SerializeField] private List<GameObject> rooms;
 
 	static public Vector2 roomSize;
@@ -45,7 +45,8 @@ public class LevelGenerator : MonoBehaviour {
 				}
 			}
 			mapModel[vert,hori] = 1;
-			rooms.Add(Instantiate(mainRoom,
+            int roomNumber = Random.Range(0, mainRoom.Count);
+			rooms.Add(Instantiate(mainRoom[roomNumber],
 								  Vector3.up*vert*roomSize.y + Vector3.right*hori*roomSize.x,
 								  Quaternion.identity,
 								  transform));
@@ -72,15 +73,16 @@ public class LevelGenerator : MonoBehaviour {
 		}
 	}
 	private void InstantiateSideRoom(int horizontal, int vertical){
-		var temp_go = Instantiate(sideRoom,
+        int roomNumber = Random.Range(0, sideRoom.Count);
+		var temp_go = Instantiate(sideRoom[roomNumber],
 							  	  Vector3.up*vertical*roomSize.y + Vector3.right*horizontal*roomSize.x,
 								  Quaternion.identity,
 								  transform);
 		rooms.Add(temp_go);
 	}
 	private void GetRoomSize(){
-		roomSize = mainRoom.GetComponent<SpriteRenderer>().size*mainRoom.transform.localScale.x;
-		roomScale = mainRoom.transform.localScale.x;
+		roomSize = mainRoom[0].GetComponent<SpriteRenderer>().size*mainRoom[0].transform.localScale.x;
+		roomScale = mainRoom[0].transform.localScale.x;
 	}
 
 }

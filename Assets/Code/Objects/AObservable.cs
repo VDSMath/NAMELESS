@@ -22,8 +22,6 @@ abstract public class AObservable : MonoBehaviour {
 
     private void Start()
     {
-        textBackground.gameObject.SetActive(false);
-        textBox.text = observeText.text;
         canMove = false;
         canMoveBack = false;
         moveBack = false;
@@ -60,6 +58,9 @@ abstract public class AObservable : MonoBehaviour {
 
     public void Observe(GameObject observerT)
     {
+
+        textBackground.gameObject.SetActive(false);
+        textBox.text = observeText.text;
         observer = observerT;
         observer.GetComponent<PlayerInteractor>().canObserve = false;
         cam = Camera.main.gameObject;
