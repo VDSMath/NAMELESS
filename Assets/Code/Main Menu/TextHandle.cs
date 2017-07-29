@@ -34,6 +34,10 @@ public class TextHandle : MonoBehaviour {
         float alphaStep = 1 / sizeDifference;
         for (i = 0; i <= sizeDifference; i += sizeDifference / (fadeInTime * 10))
         {
+            if(Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Q))
+            {
+                i = sizeDifference;
+            }
             temp.a = i * alphaStep;
             title.color = temp;
             title.gameObject.transform.localScale = new Vector3(startSize.x + i, startSize.y + i, startSize.z);
