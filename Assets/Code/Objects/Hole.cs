@@ -19,11 +19,24 @@ public class Hole : MonoBehaviour {
 
     private IEnumerator Fall(GameObject fallen)
     {
+        fallen.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        Transform[] children = fallen.GetComponentsInChildren<Transform>();
+
+        foreach(Transform t in children)
+        {
+            if(t.gameObject.name != "Player")
+                t.gameObject.SetActive(false);
+        }
+            
+
         float i;
         Vector2 scale = fallen.transform.localScale;
+        Color initialColor = fallen.GetComponent<SpriteRenderer>().color;
         for (i = 0; i <= fallScaleDifference; i += 0.1f)
         {
             fallen.transform.localScale = new Vector2(scale.x - i, scale.y - i);
+            initialColor.a = 1 - i / (fallScaleDifference * 1.2f);
+            fallen.GetComponent<SpriteRenderer>().color = initialColor; 
 
             yield return new WaitForSeconds(0.001f);
         }
