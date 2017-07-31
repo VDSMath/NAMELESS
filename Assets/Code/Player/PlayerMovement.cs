@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour {
 	[SerializeField] private GameObject body;
 
 	[Header("Movement Properties")]
-	[SerializeField] private float walkSpeed;
+	public float walkSpeed;
 	[SerializeField] private float linearDrag;
 	[SerializeField] private float dashDistance;
 	public Vector2 lastDirection;

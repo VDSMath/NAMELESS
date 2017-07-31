@@ -40,5 +40,7 @@ public class Hole : MonoBehaviour {
 
             yield return new WaitForSeconds(0.001f);
         }
+
+        fallen.GetComponent<PlayerStatus>().GameOver();
     }
 }
