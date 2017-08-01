@@ -30,10 +30,12 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] Image i_arrow;
 
     [Header("Items")]
-    public int numberOfKeys;
     public int numberOfCures;
+    public int numberOfKeys;   
+    [SerializeField] private Text cureCounter;
+    [SerializeField] private Text keyCounter;
 
-	private void Start(){
+    private void Start(){
 		ShowMainItem();
 		sliderHP.maxValue = maxLife;
 		sliderENE.maxValue = maxEnergy;
@@ -48,6 +50,7 @@ public class PlayerStatus : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Q) && numberOfCures >= 1)
         {
             numberOfCures--;
+            cureCounter.text = numberOfCures.ToString();
             sliderHP.value = actualLife += maxLife / 2;
         }
     }
@@ -59,10 +62,12 @@ public class PlayerStatus : MonoBehaviour {
         {
             case ("cure"):
                 numberOfCures++;
+                cureCounter.text = numberOfCures.ToString();
                 break;
 
             case ("key"):
-                numberOfKeys++;
+                ++numberOfKeys;
+                keyCounter.text = numberOfKeys.ToString();
                 break;
         }
     }
