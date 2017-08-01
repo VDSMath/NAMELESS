@@ -30,42 +30,69 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] Image i_arrow;
 
     [Header("Items")]
+    [SerializeField] private float defenseBuffDuration;
     public int numberOfCures;
+    public int numberOfDefenseBuffs;
     public int numberOfKeys;   
     [SerializeField] private Text cureCounter;
+    [SerializeField] private Text defenseCounter;
     [SerializeField] private Text keyCounter;
+
+    private bool buffedDefense;
 
     private void Start(){
 		ShowMainItem();
+
+        buffedDefense = false;
 		sliderHP.maxValue = maxLife;
 		sliderENE.maxValue = maxEnergy;
 	}
 	private void Update(){
 		ChangeMainItem();
-        Cure();
+        UsePickup();
 	}
 
-    private void Cure()
+    private void UsePickup()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && numberOfCures >= 1)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && numberOfCures >= 1)
         {
             numberOfCures--;
             cureCounter.text = numberOfCures.ToString();
             sliderHP.value = actualLife += maxLife / 2;
         }
+
+        if(Input.GetKeyDown(KeyCode.Alpha2) && numberOfDefenseBuffs >= 1)
+        {
+            numberOfDefenseBuffs--;
+            defenseCounter.text = numberOfDefenseBuffs.ToString();
+            StartCoroutine(ActivateDefenseBuff());
+        }
     }
 
+    private IEnumerator ActivateDefenseBuff()
+    {
+        gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        buffedDefense = true;
+        yield return new WaitForSeconds(defenseBuffDuration);
+        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        buffedDefense = false;
+    }
 
     public void PickUp(string item)
     {
         switch (item)
         {
-            case ("cure"):
+            case "cure":
                 numberOfCures++;
                 cureCounter.text = numberOfCures.ToString();
                 break;
 
-            case ("key"):
+            case "defense":
+                numberOfDefenseBuffs++;
+                defenseCounter.text = numberOfDefenseBuffs.ToString();
+                break;
+
+            case "key":
                 ++numberOfKeys;
                 keyCounter.text = numberOfKeys.ToString();
                 break;
@@ -76,7 +103,11 @@ public class PlayerStatus : MonoBehaviour {
     {
         Vector2 knockbackDirection = dealer.transform.position - transform.position;
         GetComponent<Rigidbody2D>().AddForce(-knockbackDirection.normalized * knockbackDistance);
-        actualLife -= damageAmount;
+
+        if(buffedDefense)
+            actualLife -= damageAmount/2;
+        else
+            actualLife -= damageAmount;
 
         if (actualLife - 1 >= 0)
         {
