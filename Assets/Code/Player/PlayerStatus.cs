@@ -29,6 +29,10 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] Image i_sword;
 	[SerializeField] Image i_arrow;
 
+    [Header("Items")]
+    public int numberOfKeys;
+    public int numberOfCures;
+
 	private void Start(){
 		ShowMainItem();
 		sliderHP.maxValue = maxLife;
@@ -36,7 +40,32 @@ public class PlayerStatus : MonoBehaviour {
 	}
 	private void Update(){
 		ChangeMainItem();
+        Cure();
 	}
+
+    private void Cure()
+    {
+        if (Input.GetKeyDown(KeyCode.Q) && numberOfCures >= 1)
+        {
+            numberOfCures--;
+            sliderHP.value = actualLife += maxLife / 2;
+        }
+    }
+
+
+    public void PickUp(string item)
+    {
+        switch (item)
+        {
+            case ("cure"):
+                numberOfCures++;
+                break;
+
+            case ("key"):
+                numberOfKeys++;
+                break;
+        }
+    }
 
     public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
     {
