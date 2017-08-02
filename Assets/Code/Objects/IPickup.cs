@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Collider2D))]
 public class IPickup : MonoBehaviour
 {
-    [Tooltip("Define o tipo de item: cure, defense, key")]
+    [Tooltip("Define o tipo de item: armor, cure, defense, key")]
     [SerializeField]
     private string itemType;
 

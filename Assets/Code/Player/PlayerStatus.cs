@@ -13,8 +13,12 @@ public class PlayerStatus : MonoBehaviour {
 	[Header("Health Status")]
 	[SerializeField] private int maxLife;
 	[SerializeField] private int actualLife;
+	[SerializeField] private int actualArmor;
 	[SerializeField] private float iFrameTimeIfHitted;
 	[SerializeField] private Slider sliderHP;
+	[SerializeField] private Image armorImage;
+
+	private bool canTakeDamage;
 
 	[Header("Energy Status")]
 	[SerializeField] private int maxEnergy;
@@ -42,7 +46,7 @@ public class PlayerStatus : MonoBehaviour {
 
     private void Start(){
 		ShowMainItem();
-
+		canTakeDamage = true;
         buffedDefense = false;
 		sliderHP.maxValue = maxLife;
 		sliderENE.maxValue = maxEnergy;
@@ -82,6 +86,11 @@ public class PlayerStatus : MonoBehaviour {
     {
         switch (item)
         {
+			case "armor":
+				actualArmor++;
+				RefreshArmor();
+				break;
+
             case "cure":
                 numberOfCures++;
                 cureCounter.text = numberOfCures.ToString();
@@ -99,25 +108,68 @@ public class PlayerStatus : MonoBehaviour {
         }
     }
 
+	private void RefreshArmor() 
+	{
+		if(actualArmor >= 1) {
+			armorImage.gameObject.SetActive(true);
+			Text t = armorImage.GetComponentInChildren<Text>();
+			t.text = actualArmor.ToString();
+		} else {
+			armorImage.gameObject.SetActive(false);
+		}
+	}
+
     public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
     {
-        Vector2 knockbackDirection = dealer.transform.position - transform.position;
-        GetComponent<Rigidbody2D>().AddForce(-knockbackDirection.normalized * knockbackDistance);
+		if (canTakeDamage) {
+			Vector2 knockbackDirection = dealer.transform.position - transform.position;
+			GetComponent<Rigidbody2D>().AddForce(-knockbackDirection.normalized * knockbackDistance);
+			StartCoroutine(Flash());
 
-        if(buffedDefense)
-            actualLife -= damageAmount/2;
-        else
-            actualLife -= damageAmount;
+			if (buffedDefense)
+				damageAmount -= damageAmount / 2;
 
-        if (actualLife - 1 >= 0)
-        {
-            sliderHP.value = --actualLife;
-        }
-        else
-        {
-            GameOver();
-        }
+			if (actualArmor >= 1) {
+				actualArmor -= damageAmount;
+				if (actualArmor < 0)
+					actualArmor = 0;
+
+				RefreshArmor();
+			} else {
+				actualLife -= damageAmount;
+			}
+
+			if (actualLife - 1 >= 0) {
+				sliderHP.value = actualLife;
+			} else {
+				GameOver();
+			}
+		}
     }
+
+	private IEnumerator Flash() {
+		canTakeDamage = false;
+
+		Color atual = gameObject.GetComponent<SpriteRenderer>().color;
+		Color transparente = atual;
+		transparente.a = 0.2f;
+
+		int flashLoops = 8;
+
+		gameObject.GetComponent<SpriteRenderer>().color = transparente;
+		yield return new WaitForSeconds(0.3f);
+
+		for (int i = 0; i <= flashLoops; i++) {
+			if (i % 2 == 1)
+				gameObject.GetComponent<SpriteRenderer>().color = transparente;
+			else
+				gameObject.GetComponent<SpriteRenderer>().color = atual;
+			
+			yield return new WaitForSeconds(.1f);
+		}
+
+		canTakeDamage = true;
+	}
     
 	public void LoseEnergy(){
 		if(actualEnergy-1 >= 0){
