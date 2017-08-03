@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Ink.Runtime;
 
 abstract public class AObservable : MonoBehaviour {
+
 
     protected GameObject cam, observer;
     protected bool canMove, canMoveBack, moveBack;
     protected float journeyLength, startTime;
     private Vector3 iniz;
 
+    [SerializeField]
+    private Image instructionImage;
     [SerializeField]
     protected float moveSpeed;
     [SerializeField]
@@ -18,13 +22,26 @@ abstract public class AObservable : MonoBehaviour {
     protected Text textBox;
 
     [SerializeField]
-    TextAsset observeText;
+    TextAsset inkText;
+    private Story story;
+
+    protected string[] splitText;
+    private bool dialogue, forceMove, listenChoice, startRefresh;
+    private int i;
 
     private void Start()
     {
         canMove = false;
         canMoveBack = false;
+        dialogue = false;
+        forceMove = false;
+        listenChoice = false;
         moveBack = false;
+        startRefresh = false;
+
+        i = 0;
+
+        splitText = inkText.text.Split(new char[] { ' ' });
 
         textBackground = transform.parent.Find("Canvas").transform.Find("Observar - Text Box").gameObject.GetComponent<Image>();
         textBox = textBackground.transform.Find("Texto").gameObject.GetComponentInChildren<Text>();
@@ -37,7 +54,7 @@ abstract public class AObservable : MonoBehaviour {
             Move();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q) && canMoveBack)
+        if ((Input.GetKeyDown(KeyCode.Q) && canMoveBack) || (Input.GetKeyDown(KeyCode.Space) && forceMove))
         {
             if (canMove)
             {
@@ -57,12 +74,26 @@ abstract public class AObservable : MonoBehaviour {
         {
             MoveBack();
         }
+
+        if (startRefresh)
+        {
+            RefreshView();
+        }
+
+        if (listenChoice)
+        {
+            ListenForChoice();
+        }
+    }
+
+    void StartMoveBack()
+    {
+
     }
 
     public void Observe(GameObject observerT)
     {
         textBackground.gameObject.SetActive(true);
-        textBox.text = observeText.text;
         observer = observerT;
         observer.GetComponent<PlayerInteractor>().canObserve = false;
         cam = Camera.main.gameObject;
@@ -70,9 +101,82 @@ abstract public class AObservable : MonoBehaviour {
         startTime = Time.time;
         journeyLength = Vector2.Distance(iniz, transform.position);
         canMove = true;
+
+        StartStory();
     }
 
+    private void StartStory()
+    {
+        story = new Story(inkText.text);
+        string text = story.Continue().Trim();
+        textBox.text = text;
+        startRefresh = true;
+    }
+
+    void RefreshView()
+    {
+
+        if(textBox.text == ".instrucoes.")
+        {
+            instructionImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            instructionImage.gameObject.SetActive(false);
+        }
+
+
+        if (story.canContinue)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                string text = story.Continue().Trim();
+                textBox.text = text;
+            }
+        }
+
+        else if(story.currentChoices.Count > 0)
+        {
+            textBox.text += "\n\n";
+            for (int i = 0; i < story.currentChoices.Count; i++)
+            {
+                Choice choice = story.currentChoices[i];
+                textBox.text += (i + 1 + " - " + choice.text + "\n");
+            }
+
+            listenChoice = true;
+        } else
+        {
+            forceMove = true;
+        }
+    }
     
+    void ListenForChoice()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            listenChoice = false;
+            SelectChoice(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            listenChoice = false;
+            SelectChoice(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            listenChoice = false;
+            SelectChoice(2);
+        }
+    }
+
+    void SelectChoice(int choice)
+    {
+        story.ChooseChoiceIndex(choice);
+        string text = story.Continue().Trim();
+        textBox.text = text;
+    }
+
     protected void MoveBack()
     {
         float distCovered = (Time.time - startTime) * moveSpeed;
