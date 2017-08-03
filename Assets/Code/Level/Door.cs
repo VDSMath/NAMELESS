@@ -11,6 +11,8 @@ public class Door : MonoBehaviour,IInteractable {
 	[SerializeField]private Door otherDoor;
     private float moveSpeed = 10f;
     private GameObject mainCamera;
+    private GameObject fog;
+    private GameObject minimapImage;
 
     private bool canMove;
     private Vector3 target;
@@ -19,6 +21,7 @@ public class Door : MonoBehaviour,IInteractable {
 	const float rayDistance = 5f;
 
 	private void Start(){
+        
         canMove = false;
 		GetCamera();
 		ExistDoor();
@@ -56,10 +59,15 @@ public class Door : MonoBehaviour,IInteractable {
 		if(ray.collider == null){
 			Destroy(this.gameObject);
 		}else{
-			otherDoor = ray.collider.gameObject.GetComponent<Door>();
+            minimapImage = ray.collider.transform.parent.Find("New Sprite").gameObject;
+            minimapImage.SetActive(false);
+            fog = ray.collider.transform.parent.Find("Fog").gameObject;
+            otherDoor = ray.collider.gameObject.GetComponent<Door>();
 		}
 	}
 	public void Interact(){
+        fog.SetActive(false);
+        minimapImage.SetActive(true);
 		GameObject player = GameObject.Find("Player");
 		player.transform.position = otherDoor.transform.position;
 		ChangeCameraPosition();

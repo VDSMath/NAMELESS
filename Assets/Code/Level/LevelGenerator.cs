@@ -19,11 +19,14 @@ public class LevelGenerator : MonoBehaviour {
 	static public Vector2 roomSize;
 	static public float roomScale;
 
-	[Header("Dungeon Map")]
+    bool firstRoom;
+
+    [Header("Dungeon Map")]
 	GameObject[,] map = new GameObject[size,size];
 	int[,] mapModel = new int[size,size];
 
 	private void Start(){
+        firstRoom = true;
 		GetRoomSize();
 		CreateMainPath();
 	}
@@ -33,24 +36,27 @@ public class LevelGenerator : MonoBehaviour {
 
 		while (hori + vert > 0){
 			if(Random.Range(0,2) > 0 && hori > 0){
-				hori--;
+                hori--;
 				if(Random.Range(0,10) > sideRoomChance){
 					CreateSidePath(hori, vert, Vector2.left);
 				}
 
 			}else if (vert > 0){
-				vert--;
+                vert--;
 				if(Random.Range(0,10) > sideRoomChance){
 					CreateSidePath(hori, vert, Vector2.up);
 				}
 			}
 			mapModel[vert,hori] = 1;
             int roomNumber = Random.Range(0, mainRoom.Count);
-			rooms.Add(Instantiate(mainRoom[roomNumber],
-								  Vector3.up*vert*roomSize.y + Vector3.right*hori*roomSize.x,
-								  Quaternion.identity,
-								  transform));
+            GameObject g = Instantiate(mainRoom[roomNumber],
+                                  Vector3.up * vert * roomSize.y + Vector3.right * hori * roomSize.x,
+                                  Quaternion.identity,
+                                  transform);
+            rooms.Add(g);
 		}
+
+        rooms[rooms.Count-1].GetComponentInChildren<ParticleSystem>().gameObject.SetActive(false);
 	}
 	private void CreateSidePath(int h, int v, Vector2 dir){
 		int numberOfSideRooms = Random.Range(2,4);

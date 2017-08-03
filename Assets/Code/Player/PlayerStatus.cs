@@ -15,7 +15,7 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] private int actualLife;
 	[SerializeField] private int actualArmor;
 	[SerializeField] private float iFrameTimeIfHitted;
-	[SerializeField] private Slider sliderHP;
+	[SerializeField] private Image lifeImage;
 	[SerializeField] private Image armorImage;
 
 	private bool canTakeDamage;
@@ -24,7 +24,7 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] private int maxEnergy;
 	[SerializeField] private int actualEnergy;
 	[SerializeField] private float timeToRecover;
-	[SerializeField] private Slider sliderENE;
+	[SerializeField] private Image energyImage;
 
 	[Header("Player Mode")]
 	[SerializeField] MainItems mainItem;
@@ -43,16 +43,25 @@ public class PlayerStatus : MonoBehaviour {
     [SerializeField] private Text keyCounter;
 
     private bool buffedDefense;
+    private bool killed;
 
     private void Start(){
 		ShowMainItem();
 		canTakeDamage = true;
         buffedDefense = false;
-		sliderHP.maxValue = maxLife;
-		sliderENE.maxValue = maxEnergy;
-	}
+        killed = false;
+		lifeImage.fillAmount = 1;
+		energyImage.fillAmount = 1;
+        armorImage.fillAmount = 0;      
+    }
 	private void Update(){
-		ChangeMainItem();
+        if (!killed)
+        {
+            MatarSalasExtras();
+            killed = true;
+        }
+
+        ChangeMainItem();
         UsePickup();
 	}
 
@@ -62,7 +71,8 @@ public class PlayerStatus : MonoBehaviour {
         {
             numberOfCures--;
             cureCounter.text = numberOfCures.ToString();
-            sliderHP.value = actualLife += maxLife / 2;
+            actualLife += maxLife / 2;
+            lifeImage.fillAmount = (float)actualLife / maxLife ;
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2) && numberOfDefenseBuffs >= 1)
@@ -70,6 +80,16 @@ public class PlayerStatus : MonoBehaviour {
             numberOfDefenseBuffs--;
             defenseCounter.text = numberOfDefenseBuffs.ToString();
             StartCoroutine(ActivateDefenseBuff());
+        }
+    }
+
+    private void MatarSalasExtras()
+    {
+        GameObject[] extras = GameObject.FindGameObjectsWithTag("Minimap Image");
+
+        foreach(GameObject img in extras)
+        {
+            Destroy(img.transform.parent.gameObject);
         }
     }
 
@@ -110,14 +130,8 @@ public class PlayerStatus : MonoBehaviour {
 
 	private void RefreshArmor() 
 	{
-		if(actualArmor >= 1) {
-			armorImage.gameObject.SetActive(true);
-			Text t = armorImage.GetComponentInChildren<Text>();
-			t.text = actualArmor.ToString();
-		} else {
-			armorImage.gameObject.SetActive(false);
-		}
-	}
+        armorImage.fillAmount = (float)actualArmor / 3;
+    }
 
     public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
     {
@@ -140,7 +154,7 @@ public class PlayerStatus : MonoBehaviour {
 			}
 
 			if (actualLife - 1 >= 0) {
-				sliderHP.value = actualLife;
+                lifeImage.fillAmount = (float)actualLife/maxLife ;
 			} else {
 				GameOver();
 			}
@@ -173,7 +187,8 @@ public class PlayerStatus : MonoBehaviour {
     
 	public void LoseEnergy(){
 		if(actualEnergy-1 >= 0){
-			sliderENE.value = --actualEnergy;
+            --actualEnergy;
+            energyImage.fillAmount = (float)actualEnergy /maxEnergy;
 		}else{
 			//
 		}
@@ -184,9 +199,9 @@ public class PlayerStatus : MonoBehaviour {
 		return actualEnergy > 0;
 	}
 	private void RecoverEnergy(){
-		sliderENE.value++;
-		actualEnergy = (int) sliderENE.value;
-	}
+        ++actualEnergy;
+        energyImage.fillAmount = (float)actualEnergy / maxEnergy;
+    }
 	private IEnumerator RecoverEnergyByTime(){
 		while(actualEnergy != maxEnergy){
 			yield return new WaitForSeconds(timeToRecover);
