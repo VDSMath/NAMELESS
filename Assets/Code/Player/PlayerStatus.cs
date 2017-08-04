@@ -36,6 +36,7 @@ public class PlayerStatus : MonoBehaviour {
     [Header("Items")]
     [SerializeField] private GameObject bomb;
     [SerializeField] private float defenseBuffDuration;
+    [SerializeField] private Text bombCounter;
     [SerializeField] private Text cureCounter;
     [SerializeField] private Text defenseCounter;
     [SerializeField] private Text keyCounter;
@@ -92,7 +93,7 @@ public class PlayerStatus : MonoBehaviour {
             b = Instantiate(bomb);
             b.GetComponent<Bomb>().Explode();
             b.transform.position = transform.position;
-
+            bombCounter.text = numberOfBombs.ToString();
         }
     }
 
@@ -126,6 +127,7 @@ public class PlayerStatus : MonoBehaviour {
 
             case "bomb":
                 numberOfBombs++;
+                bombCounter.text = numberOfBombs.ToString();
                 break;
 
             case "cure":

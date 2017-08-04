@@ -67,6 +67,7 @@ abstract public class AObservable : MonoBehaviour {
             journeyLength = Vector2.Distance(cam.transform.position, iniz);
             moveBack = true;
             canMoveBack = false;
+            forceMove = false;
         }
         
 

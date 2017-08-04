@@ -15,6 +15,7 @@ public class Bomb : MonoBehaviour {
 
     public void Explode()
     {
+        gameObject.GetComponent<ParticleSystem>().enableEmission = false;
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
         StartCoroutine(Countdown());
     }
