@@ -17,7 +17,7 @@ abstract public class AObservable : MonoBehaviour {
     [SerializeField]
     protected float moveSpeed;
     [SerializeField]
-    protected Image textBackground;
+    protected Image imageBackground, textBackground;
     [SerializeField]
     protected Text textBox;
 
@@ -93,6 +93,7 @@ abstract public class AObservable : MonoBehaviour {
 
     public void Observe(GameObject observerT)
     {
+        imageBackground.gameObject.SetActive(true);
         textBackground.gameObject.SetActive(true);
         observer = observerT;
         observer.GetComponent<PlayerInteractor>().canObserve = false;
@@ -226,5 +227,6 @@ abstract public class AObservable : MonoBehaviour {
     protected void HideText()
     {
         textBackground.gameObject.SetActive(false);
+        imageBackground.gameObject.SetActive(false);
     }
 }

@@ -3,10 +3,11 @@
 - que fala
 - mas esse não é o ponto. você sabe jogar essa bosta de jogo?
 
-*[sim]
+*[não]
     -- quer aprender
     **[sim]
     --- eu também
+    --- os controles são uma merda
     --- mas posso quebrar seu galho
     --- me deram esse papel aqui, dá uma olhada
     --- .instrucoes.
@@ -14,7 +15,7 @@
     **[nao]
     --- para de falar comigo então seu merda
     -> curse
-*[não]
+*[sim]
     -- sério
     -- jae então
     -> curse

@@ -34,13 +34,16 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] Image i_arrow;
 
     [Header("Items")]
+    [SerializeField] private GameObject bomb;
     [SerializeField] private float defenseBuffDuration;
-    public int numberOfCures;
-    public int numberOfDefenseBuffs;
-    public int numberOfKeys;   
     [SerializeField] private Text cureCounter;
     [SerializeField] private Text defenseCounter;
     [SerializeField] private Text keyCounter;
+
+    private int numberOfBombs;
+    private int numberOfCures;
+    private int numberOfDefenseBuffs;
+    private int numberOfKeys;
 
     private bool buffedDefense;
     private bool killed;
@@ -81,6 +84,16 @@ public class PlayerStatus : MonoBehaviour {
             defenseCounter.text = numberOfDefenseBuffs.ToString();
             StartCoroutine(ActivateDefenseBuff());
         }
+
+        if(Input.GetKeyDown(KeyCode.Alpha3) && numberOfBombs >= 1)
+        {
+            GameObject b;
+            numberOfBombs--;
+            b = Instantiate(bomb);
+            b.GetComponent<Bomb>().Explode();
+            b.transform.position = transform.position;
+
+        }
     }
 
     private void MatarSalasExtras()
@@ -110,6 +123,10 @@ public class PlayerStatus : MonoBehaviour {
 				actualArmor++;
 				RefreshArmor();
 				break;
+
+            case "bomb":
+                numberOfBombs++;
+                break;
 
             case "cure":
                 numberOfCures++;
