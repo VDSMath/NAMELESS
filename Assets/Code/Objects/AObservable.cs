@@ -24,8 +24,7 @@ abstract public class AObservable : MonoBehaviour {
     [SerializeField]
     TextAsset inkText;
     private Story story;
-
-    protected string[] splitText;
+	
     private bool dialogue, forceMove, listenChoice, startRefresh;
     private int i;
 
@@ -40,8 +39,6 @@ abstract public class AObservable : MonoBehaviour {
         startRefresh = false;
 
         i = 0;
-
-        splitText = inkText.text.Split(new char[] { ' ' });
 
         textBackground = transform.parent.Find("Canvas").transform.Find("Observar - Text Box").gameObject.GetComponent<Image>();
         textBox = textBackground.transform.Find("Texto").gameObject.GetComponentInChildren<Text>();
