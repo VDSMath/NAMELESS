@@ -14,14 +14,14 @@ public class MapGenerator : MonoBehaviour {
 		mapBase = new int[mapSquareSize, mapSquareSize];
 
 		for(int i = 0; i <= mapSquareSize - 1; i++) {
-			for(int j = 0; i <= mapSquareSize - 1; i++) {
+			for(int j = 0; j <= mapSquareSize - 1; j++) {
 				mapBase[i, j] = 0;
 			}
 		}
 
 		InitiateMap();
 		for(int i = 0; i <= mapSquareSize - 1; i++) {
-			for(int j = 0; i <= mapSquareSize - 1; i++) {
+			for(int j = 0; j <= mapSquareSize - 1; j++) {
 				Debug.Log(mapBase[i, j]);
 			}
 		}
