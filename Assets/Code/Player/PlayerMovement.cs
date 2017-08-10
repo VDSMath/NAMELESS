@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour {
 		myRB2D.AddForce(direction*walkSpeed);
 	}
 	private void Dash(){
-		if(Input.GetKeyDown("space") && myPS.CanAct()){
+		if(Input.GetButtonDown("Fire1") && myPS.CanAct()){
 			Vector2 direction = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).normalized;
 			myRB2D.AddForce(direction*walkSpeed*dashDistance);
 			myPS.LoseEnergy();

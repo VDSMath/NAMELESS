@@ -51,7 +51,7 @@ abstract public class AObservable : MonoBehaviour {
             Move();
         }
 
-        if ((Input.GetKeyDown(KeyCode.Q) && canMoveBack) || (Input.GetKeyDown(KeyCode.Space) && forceMove))
+        if ((Input.GetButtonDown("Fire3") && canMoveBack) || (Input.GetButtonDown("Fire1") && forceMove))
         {
             if (canMove)
             {
@@ -127,7 +127,7 @@ abstract public class AObservable : MonoBehaviour {
 
         if (story.canContinue)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetButtonDown("Fire1"))
             {
                 string text = story.Continue().Trim();
                 textBox.text = text;

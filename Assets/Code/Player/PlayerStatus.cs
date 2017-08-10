@@ -250,7 +250,7 @@ public class PlayerStatus : MonoBehaviour {
 		}
 	}
 	private void ChangeMainItem(){
-		if(Input.GetKeyDown(KeyCode.E)){
+		if(Input.GetButtonDown("Fire4")){
 			switch(mainItem){
 				case MainItems.SWORD:
 					mainItem = MainItems.ARROW;

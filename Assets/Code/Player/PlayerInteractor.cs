@@ -24,7 +24,7 @@ public class PlayerInteractor : MonoBehaviour {
 		InteractFromInput();
 	}
 	private void InteractFromInput(){
-		if(Input.GetKeyDown(KeyCode.Q)){
+		if(Input.GetButtonDown("Fire3")){
 
 			RaycastHit2D ray = Physics2D.Raycast(transform.position,direction,interactDistance);
 			if(ray.collider != null) {

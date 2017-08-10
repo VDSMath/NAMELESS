@@ -30,7 +30,7 @@ public class PlayerSword : MonoBehaviour, IWeapon {
 		attacking = false;
 	}
 	private void Attack(){
-		if(Input.GetKeyDown(KeyCode.F) && GetComponentInParent<PlayerStatus>().CanAct()){
+		if(Input.GetButtonDown("Fire2") && GetComponentInParent<PlayerStatus>().CanAct()){
 			StartCoroutine( AttackAnimation() );
 			GetComponentInParent<PlayerStatus>().LoseEnergy();
 		}

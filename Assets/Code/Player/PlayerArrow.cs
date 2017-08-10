@@ -23,7 +23,7 @@ public class PlayerArrow : MonoBehaviour,IWeapon {
 		canShoot = true;
 	}
 	private void Shoot(){
-		if(Input.GetKeyDown(KeyCode.F) && canShoot){
+		if(Input.GetButtonDown("Fire2") && canShoot){
 			CreateShoot();
 			StartCoroutine( ShootCoolDown() );
 		}
