@@ -3,29 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class GameOver : MonoBehaviour {
 
-public class TextHandle : MonoBehaviour {
-
+    [SerializeField]
+    private Image backgroundImage;
     [SerializeField]
     private Text textObject;
     [SerializeField]
-    private Button startButton;
+    private Button restartButton;
     [SerializeField]
-    private float delayBeforeFade, sizeDifference, fadeInTime;
+    private float delayBeforeFade, imageFadeTime, imageMaxAlpha, sizeDifference, fadeInTime;
 
     private Vector3 originalSize, startSize;
 
     // Use this for initialization
-    void Start () {
-        startButton.gameObject.SetActive(false);
+    void Start()
+    {
+        restartButton.gameObject.SetActive(false);
         originalSize = textObject.gameObject.transform.localScale;
         startSize = new Vector3(originalSize.x - sizeDifference, originalSize.y - sizeDifference, originalSize.z);
         textObject.gameObject.transform.localScale = startSize;
+    }
+
+    public void StartFade()
+    {
+        StartCoroutine(FadeInBackground());
+    }
+
+    IEnumerator FadeInBackground()
+    {
+        backgroundImage.gameObject.SetActive(true);
+        Color temp = backgroundImage.color;
+        temp.a = 0;
+        backgroundImage.color = temp;
+
+        for (float i = 0; i <= imageMaxAlpha; i += imageMaxAlpha / 50)
+        {
+            temp.a = i/255;
+            backgroundImage.color = temp;
+            yield return new WaitForSeconds(0.001f);
+        }
+
         StartCoroutine(FadeIn());
-	}
+    }
 
     IEnumerator FadeIn()
     {
+        textObject.gameObject.SetActive(true);
         Color temp = textObject.color;
         temp.a = 0;
         textObject.color = temp;
@@ -34,18 +58,16 @@ public class TextHandle : MonoBehaviour {
         float alphaStep = 1 / sizeDifference;
         for (i = 0; i <= sizeDifference; i += sizeDifference / (fadeInTime * 10))
         {
-            if(Input.GetKey(KeyCode.F) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Q))
-            {
-                i = sizeDifference;
-            }
-
-            //if(i >= 0.1)
-                //textObject.text = "CHATUBALESS";
+            //if (Input.GetKey(KeyCode.F) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Q))
+            //{
+            //    i = sizeDifference;
+            //}
+            
             temp.a = i * alphaStep;
             textObject.color = temp;
             textObject.gameObject.transform.localScale = new Vector3(startSize.x + i, startSize.y + i, startSize.z);
             yield return new WaitForSeconds(0.05f);
         }
-        startButton.gameObject.SetActive(true);
+        restartButton.gameObject.SetActive(true);
     }
 }

@@ -17,6 +17,7 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] private float iFrameTimeIfHitted;
 	[SerializeField] private Image lifeImage;
 	[SerializeField] private Image armorImage;
+    [SerializeField] private GameObject gameOverHandler;
 
 	private bool canTakeDamage;
 
@@ -229,7 +230,16 @@ public class PlayerStatus : MonoBehaviour {
 		StopAllCoroutines();
 	}
 	public void GameOver(){
-		//
+        GetComponent<PlayerMovement>().canMove = false;
+
+        Transform[] children = GetComponentsInChildren<Transform>();
+
+        foreach(Transform c in children)
+        {
+                c.gameObject.SetActive(false);
+        }
+
+        gameOverHandler.GetComponent<GameOver>().StartFade();
 	}
 	private void ShowMainItem(){
 		switch(mainItem){

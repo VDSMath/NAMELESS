@@ -71,7 +71,20 @@ public class Door : MonoBehaviour,IInteractable {
 		GameObject player = GameObject.Find("Player");
 		player.transform.position = otherDoor.transform.position;
 		ChangeCameraPosition();
+
+        ActivateEnemies();
 	}
+
+    private void ActivateEnemies()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach(GameObject e in enemies)
+        {
+            e.GetComponent<IEnemy>().enabled = true;
+        }
+    }
+
 	private void GetCamera(){
         mainCamera = Camera.main.gameObject;
 	}
