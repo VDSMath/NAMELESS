@@ -6,17 +6,20 @@ public class EsqueletoArmado : IEnemy {
 
     private Vector2 moveDirection, moveTarget;
     private float moveDistance, startTime, journeyLength;
-    private bool canMove;
+    private bool attacking, canMove;
     
     private GameObject player;
 
     [SerializeField]
-    private float aggroRange, maxMoveDistance, moveSpeed, timeBetweenMoves;
+    private GameObject sword;
+    [SerializeField]
+    private float aggroRange, delayBeforeAttack, maxMoveDistance, moveSpeed, timeBetweenMoves;
     private float timer;
     private bool aggro;
 
 	// Use this for initialization
 	void Start () {
+        attacking = false;
         currentHP = maxHP;
         aggro = false;
         canMove = false;
@@ -34,13 +37,42 @@ public class EsqueletoArmado : IEnemy {
         }
         else
         {
-            Attack();
+            if(Mathf.Abs((transform.position - player.transform.position).magnitude) <= 4f && !attacking)
+            {
+                attacking = true;
+                StartCoroutine(Attack());
+            }
+
+            else
+            {
+                if(!attacking)
+                    Follow();
+            }
         }       
 	}
 
-    private void Attack()
+    private IEnumerator Attack()
     {
+        Color temp = GetComponent<SpriteRenderer>().color;
+        GetComponent<SpriteRenderer>().color = Color.red;
 
+        yield return new WaitForSeconds(delayBeforeAttack);
+        GameObject s = Instantiate(sword);
+        s.transform.position = transform.position - (transform.position - player.transform.position).normalized * 2;
+        Destroy(s, .2f);
+
+        GetComponent<SpriteRenderer>().color = temp;
+
+        yield return new WaitForSeconds(1f);
+        attacking = false;
+    }
+
+    void Follow()
+    {
+        float originalZ = transform.position.z;
+
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, moveSpeed * 1.5f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, originalZ);
     }
 
     private void Wander()
@@ -83,32 +115,26 @@ public class EsqueletoArmado : IEnemy {
         {
             if(check.collider.gameObject.tag != "Obstacle" && check.collider.gameObject.tag != "Wall")
             {
-                
-                startTime = Time.time;
                 moveTarget = (Vector2)transform.position + (moveDirection * (moveDistance - 1));
-                journeyLength = Vector3.Distance(transform.position, moveTarget);
                 canMove = true;
             }
         }
 
         else
         {
-            startTime = Time.time;
             moveTarget = (Vector2)transform.position + (moveDirection * moveDistance);
-            journeyLength = Vector3.Distance(transform.position, moveTarget);
             canMove = true;
         }
     }
 
     void Move()
     {
-        float distCovered = (Time.time - startTime) * moveSpeed;
-        float fracJourney = distCovered / journeyLength;
-        transform.position = Vector3.Lerp(transform.position, moveTarget, fracJourney);
+        transform.position = Vector3.MoveTowards(transform.position, moveTarget, moveSpeed);
 
-        if(fracJourney >= 1)
+        if (Vector3.Distance(transform.position, moveTarget) <= 0.1f)
         {
             canMove = false;
-        }
+            moveDirection = transform.position;
+        }        
     }
 }
