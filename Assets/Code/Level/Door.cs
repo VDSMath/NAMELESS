@@ -18,14 +18,15 @@ public class Door : MonoBehaviour,IInteractable {
     private Vector3 target;
     private float startTime, journeyLength;
 
-	const float rayDistance = 5f;
+    Vector2 direction;
 
-	private void Start(){
-        
+    const float rayDistance = 5f;
+
+	private void Start(){        
         canMove = false;
-		GetCamera();
-		ExistDoor();
-	}
+
+        mainCamera = Camera.main.gameObject;
+    }
     private void Update()
     {
         if (canMove)
@@ -59,37 +60,41 @@ public class Door : MonoBehaviour,IInteractable {
 		if(ray.collider == null){
 			Destroy(this.gameObject);
 		}else{
-            minimapImage = ray.collider.transform.parent.Find("New Sprite").gameObject;
-            minimapImage.SetActive(false);
-            fog = ray.collider.transform.parent.Find("Fog").gameObject;
+            //minimapImage = ray.collider.transform.parent.Find("New Sprite").gameObject;
+            //minimapImage.SetActive(false);
+            //fog = ray.collider.transform.parent.Find("Fog").gameObject;
             otherDoor = ray.collider.gameObject.GetComponent<Door>();
 		}
 	}
 	public void Interact(){
-        fog.SetActive(false);
-        minimapImage.SetActive(true);
+        //fog.SetActive(false);
+        //minimapImage.SetActive(true);
 		GameObject player = GameObject.Find("Player");
-		player.transform.position = otherDoor.transform.position;
-		ChangeCameraPosition();
 
-        ActivateEnemies();
-	}
-
-    private void ActivateEnemies()
-    {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach(GameObject e in enemies)
+        switch (myDir)
         {
-            e.GetComponent<IEnemy>().enabled = true;
+            case Direction.UP:
+                direction = Vector2.up;
+                break;
+            case Direction.DOWN:
+                direction = Vector2.down;
+                break;
+            case Direction.LEFT:
+                direction = Vector2.left;
+                break;
+            case Direction.RIGHT:
+                direction = Vector2.right;
+                break;
+            default:
+                direction = Vector2.up;
+                break;
         }
-    }
 
-	private void GetCamera(){
-        mainCamera = Camera.main.gameObject;
+        player.transform.position = otherDoor.transform.position + new Vector3(direction.x * 1.2f, direction.y * 1.2f);
+		ChangeCameraPosition();
 	}
+
 	private void ChangeCameraPosition(){
-		Vector2 direction;
 		switch(myDir){
 			case Direction.UP:
 				direction = Vector2.up*LevelGenerator.roomSize.y;
@@ -108,21 +113,17 @@ public class Door : MonoBehaviour,IInteractable {
 				break;
 		}
 
-		target = mainCamera.transform.position + (Vector3)direction;
-        startTime = Time.time;
-        journeyLength = Vector3.Distance(mainCamera.transform.position, target);
+		target = otherDoor.transform.parent.transform.position;
         canMove = true;
     }
     void Move()
     {
-        float distCovered = (Time.time - startTime) * moveSpeed;
-        float fracJourney = distCovered / journeyLength;
-        mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, fracJourney);
+        mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, .12f);
         mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -10);
 
-        if (fracJourney >= 0.9f)
+        if (Vector2.Distance(mainCamera.transform.position, target) <= .01f)
         {
-            mainCamera.transform.position = target;
+            mainCamera.transform.position = new Vector3(target.x, target.y, mainCamera.transform.position.z);
             canMove = false;
         }
     }
