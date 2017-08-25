@@ -66,6 +66,13 @@ public class Door : MonoBehaviour,IInteractable {
 	public void Interact(){
         //fog.SetActive(false);
         //minimapImage.SetActive(true);
+
+        if (!otherDoor)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
 		GameObject player = GameObject.Find("Player");
 
         switch (myDir)

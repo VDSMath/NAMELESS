@@ -87,14 +87,23 @@ public class PlayerStatus : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1) && numberOfCures >= 1)
         {
             numberOfCures--;
-            cureCounter.text = numberOfCures.ToString();
-            actualLife += maxLife / 2;
+            // cureCounter.text = numberOfCures.ToString();
+            int healAmount = actualLife += maxLife / 2;
+
+            Image[] units = lifeImages.GetComponentsInChildren<Image>();
+
+            for (int i = 1; i <= healAmount; i++)
+            {
+                if (actualLife - i < 0)
+                    break;
+                units[actualLife - i].color = Color.white;
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2) && numberOfDefenseBuffs >= 1)
         {
             numberOfDefenseBuffs--;
-            defenseCounter.text = numberOfDefenseBuffs.ToString();
+          //  defenseCounter.text = numberOfDefenseBuffs.ToString();
             StartCoroutine(ActivateDefenseBuff());
         }
 
@@ -105,7 +114,7 @@ public class PlayerStatus : MonoBehaviour {
             b = Instantiate(bomb);
             b.GetComponent<Bomb>().Explode();
             b.transform.position = transform.position;
-            bombCounter.text = numberOfBombs.ToString();
+         //   bombCounter.text = numberOfBombs.ToString();
         }
     }
     
@@ -129,22 +138,22 @@ public class PlayerStatus : MonoBehaviour {
 
             case "bomb":
                 numberOfBombs++;
-                bombCounter.text = numberOfBombs.ToString();
+                //bombCounter.text = numberOfBombs.ToString();
                 break;
 
             case "cure":
                 numberOfCures++;
-                cureCounter.text = numberOfCures.ToString();
+               // cureCounter.text = numberOfCures.ToString();
                 break;
 
             case "defense":
                 numberOfDefenseBuffs++;
-                defenseCounter.text = numberOfDefenseBuffs.ToString();
+                //defenseCounter.text = numberOfDefenseBuffs.ToString();
                 break;
 
             case "key":
                 ++numberOfKeys;
-                keyCounter.text = numberOfKeys.ToString();
+                //keyCounter.text = numberOfKeys.ToString();
                 break;
         }
     }
