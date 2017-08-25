@@ -42,7 +42,7 @@ public class Room : MonoBehaviour {
 
     void UpdateContent()
     {
-
+        activeImage.SetActive(!active);
 
         if (enemies != null)
         {
