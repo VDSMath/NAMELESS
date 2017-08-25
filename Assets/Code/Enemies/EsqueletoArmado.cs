@@ -30,13 +30,14 @@ public class EsqueletoArmado : IEnemy {
 	// Update is called once per frame
 	void Update () {
         aggro = (Mathf.Abs((transform.position - player.transform.position).magnitude) <= aggroRange);
-
+        Debug.Log(Mathf.Abs((transform.position - player.transform.position).magnitude));
         if (!aggro)
         {
             Wander();
         }
         else
         {
+            Debug.Log(Mathf.Abs((transform.position - player.transform.position).magnitude));
             if(Mathf.Abs((transform.position - player.transform.position).magnitude) <= 4f && !attacking)
             {
                 attacking = true;
