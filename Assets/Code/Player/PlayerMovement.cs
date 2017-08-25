@@ -20,9 +20,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Rigidbody2D myRB2D;
 	private PlayerStatus myPS;
-
-    [HideInInspector]
-    public bool canMove;
+    
+    private bool canMove;
 
 	private void Start(){
         canMove = true;
@@ -30,6 +29,12 @@ public class PlayerMovement : MonoBehaviour {
 		GetPlayerStatus();
 		UsePhysicsProperties();
 	}
+
+    public void SetMove(bool value)
+    {
+        canMove = value;
+    }
+
 	private void FixedUpdate(){
         if (canMove)
         {

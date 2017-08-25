@@ -11,12 +11,9 @@ public class Door : MonoBehaviour,IInteractable {
 	[SerializeField]private Door otherDoor;
     private float moveSpeed = 10f;
     private GameObject mainCamera;
-    private GameObject fog;
-    private GameObject minimapImage;
 
     private bool canMove;
     private Vector3 target;
-    private float startTime, journeyLength;
 
     Vector2 direction;
 
@@ -90,6 +87,7 @@ public class Door : MonoBehaviour,IInteractable {
                 break;
         }
 
+        transform.parent.parent.parent.GetComponent<RoomManager>().SwitchCurrentRoom(otherDoor.transform.parent.parent.gameObject);
         player.transform.position = otherDoor.transform.position + new Vector3(direction.x * 1.2f, direction.y * 1.2f);
 		ChangeCameraPosition();
 	}

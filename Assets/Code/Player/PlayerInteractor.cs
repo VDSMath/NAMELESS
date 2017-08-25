@@ -37,7 +37,7 @@ public class PlayerInteractor : MonoBehaviour {
                 {
                     canObserve = false;
                     ray.collider.gameObject.GetComponent<AObservable>().Observe(gameObject);
-                    gameObject.GetComponent<PlayerMovement>().canMove = false;
+                    gameObject.GetComponent<PlayerMovement>().SetMove(false);
                 }
 			}
 

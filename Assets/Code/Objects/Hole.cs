@@ -11,7 +11,7 @@ public class Hole : MonoBehaviour {
     {
         if (collision.gameObject.name == "Player")
         {
-            collision.gameObject.GetComponent<PlayerMovement>().canMove = false;
+            collision.gameObject.GetComponent<PlayerMovement>().SetMove(false);
             collision.transform.position = new Vector3(transform.position.x, transform.position.y, collision.transform.position.z);
            StartCoroutine(Fall(collision.gameObject));
         }

@@ -15,8 +15,10 @@ public class PlayerStatus : MonoBehaviour {
 	[SerializeField] private int actualLife;
 	[SerializeField] private int actualArmor;
 	[SerializeField] private float iFrameTimeIfHitted;
-	[SerializeField] private Image lifeImage;
-	[SerializeField] private Image armorImage;
+	[SerializeField] private GameObject lifeImages;
+    [SerializeField] private GameObject lifeUnitPrefab;
+	[SerializeField] private GameObject armorImages;
+    [SerializeField] private GameObject armorUnitPrefab;
     [SerializeField] private GameObject gameOverHandler;
 
 	private bool canTakeDamage;
@@ -48,27 +50,37 @@ public class PlayerStatus : MonoBehaviour {
     private int numberOfKeys;
 
     private bool buffedDefense;
-    private bool killed;
 
     private void Start(){
 		ShowMainItem();
 		canTakeDamage = true;
         buffedDefense = false;
-        killed = false;
-		lifeImage.fillAmount = 1;
-		energyImage.fillAmount = 1;
-        armorImage.fillAmount = 0;      
+		energyImage.fillAmount = 1;   
     }
 	private void Update(){
-        if (!killed)
-        {
-            MatarSalasExtras();
-            killed = true;
-        }
 
         ChangeMainItem();
         UsePickup();
 	}
+
+    public void Sacrifice(string attribute)
+    {
+        switch (attribute)
+        {
+            case "life":
+                Image[] units = lifeImages.GetComponentsInChildren<Image>();
+                GameObject.Destroy(units[0].gameObject);
+                maxLife--;
+                actualLife = actualLife > maxLife ? maxLife : actualLife;
+                break;
+
+            case "energy":
+                maxEnergy--;
+                actualEnergy = actualEnergy > maxEnergy ? maxEnergy : actualEnergy;
+                energyImage.transform.localScale = new Vector3((float)maxEnergy/(maxEnergy + 1), energyImage.transform.localScale.y, energyImage.transform.localScale.z);
+                break;
+        }
+    }
 
     private void UsePickup()
     {
@@ -77,7 +89,6 @@ public class PlayerStatus : MonoBehaviour {
             numberOfCures--;
             cureCounter.text = numberOfCures.ToString();
             actualLife += maxLife / 2;
-            lifeImage.fillAmount = (float)actualLife / maxLife ;
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2) && numberOfDefenseBuffs >= 1)
@@ -97,17 +108,7 @@ public class PlayerStatus : MonoBehaviour {
             bombCounter.text = numberOfBombs.ToString();
         }
     }
-
-    private void MatarSalasExtras()
-    {
-        GameObject[] extras = GameObject.FindGameObjectsWithTag("Minimap Image");
-
-        foreach(GameObject img in extras)
-        {
-            Destroy(img.transform.parent.gameObject);
-        }
-    }
-
+    
     private IEnumerator ActivateDefenseBuff()
     {
         gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -150,13 +151,22 @@ public class PlayerStatus : MonoBehaviour {
 
 	private void RefreshArmor() 
 	{
-        armorImage.fillAmount = (float)actualArmor / 3;
+        
     }
 
     public void TakeDamage(GameObject dealer, float knockbackDistance, int damageAmount)
     {
 		if (canTakeDamage) {
-			Vector2 knockbackDirection = dealer.transform.position - transform.position;
+            Image[] units = lifeImages.GetComponentsInChildren<Image>();
+
+            for(int i = 1; i <= damageAmount; i++)
+            {
+                if (actualLife - i < 0)
+                    break;
+                units[actualLife - i].color = Color.black;
+            }
+
+            Vector2 knockbackDirection = dealer.transform.position - transform.position;
 			GetComponent<Rigidbody2D>().AddForce(-knockbackDirection.normalized * knockbackDistance);
 			StartCoroutine(Flash());
 
@@ -174,7 +184,7 @@ public class PlayerStatus : MonoBehaviour {
 			}
 
 			if (actualLife - 1 >= 0) {
-                lifeImage.fillAmount = (float)actualLife/maxLife ;
+
 			} else {
 				GameOver();
 			}
@@ -230,7 +240,7 @@ public class PlayerStatus : MonoBehaviour {
 		StopAllCoroutines();
 	}
 	public void GameOver(){
-        GetComponent<PlayerMovement>().canMove = false;
+        GetComponent<PlayerMovement>().SetMove(false);
 
         Transform[] children = GetComponentsInChildren<Transform>();
 

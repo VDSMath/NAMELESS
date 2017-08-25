@@ -59,7 +59,7 @@ abstract public class AObservable : MonoBehaviour {
             }
 
             HideText();
-            observer.GetComponent<PlayerMovement>().canMove = true;
+            observer.GetComponent<PlayerMovement>().SetMove(true);
             startTime = Time.time;
             journeyLength = Vector2.Distance(cam.transform.position, iniz);
             moveBack = true;
