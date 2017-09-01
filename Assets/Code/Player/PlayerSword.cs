@@ -13,13 +13,17 @@ public class PlayerSword : MonoBehaviour, IWeapon {
 	[SerializeField] private int swordDamage;
     [SerializeField] private float knockbackForce;
 	private bool attacking;
+    private Collider2D col;
 
 	private void Update(){
+        col = GetComponent<Collider2D>();
+
 		GetSwordDirection();
 		Attack();		
 	}
 	private IEnumerator AttackAnimation(){
 		attacking = true;
+        col.enabled = true;
 		for(int i = 0;i<attackDuration;i++){
 			transform.Rotate(0,0,-attackSpeed*Time.deltaTime);
 		}
@@ -28,6 +32,7 @@ public class PlayerSword : MonoBehaviour, IWeapon {
 			yield return new WaitForEndOfFrame();
 		}
 		attacking = false;
+        col.enabled = false;
 	}
 	private void Attack(){
 		if(Input.GetButtonDown("Fire2") && GetComponentInParent<PlayerStatus>().CanAct()){

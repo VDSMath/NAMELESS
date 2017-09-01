@@ -11,8 +11,10 @@ public class Door : MonoBehaviour,IInteractable {
 	[SerializeField]private Door otherDoor;
     private float moveSpeed = 10f;
     private GameObject mainCamera;
+    private GameObject player;
 
-    private bool canMove;
+    [HideInInspector]
+    public bool canMove;
     private Vector3 target;
 
     Vector2 direction;
@@ -23,6 +25,7 @@ public class Door : MonoBehaviour,IInteractable {
         canMove = false;
 
         mainCamera = Camera.main.gameObject;
+        player = GameObject.Find("Player");
     }
     private void Update()
     {
@@ -66,14 +69,13 @@ public class Door : MonoBehaviour,IInteractable {
 	public void Interact(){
         //fog.SetActive(false);
         //minimapImage.SetActive(true);
+        otherDoor.transform.parent.parent.gameObject.SetActive(true);
 
         if (!otherDoor)
         {
             gameObject.SetActive(false);
             return;
         }
-
-		GameObject player = GameObject.Find("Player");
 
         switch (myDir)
         {
@@ -96,8 +98,17 @@ public class Door : MonoBehaviour,IInteractable {
 
         transform.parent.parent.parent.GetComponent<RoomManager>().SwitchCurrentRoom(otherDoor.transform.parent.parent.gameObject);
         player.transform.position = otherDoor.transform.position + new Vector3(direction.x * 1.2f, direction.y * 1.2f);
-		ChangeCameraPosition();
-	}
+
+        if (otherDoor.transform.parent.parent.GetComponent<Room>().roomType == CameraMovement.Fixed)
+        {
+            ChangeCameraPosition();
+        }
+        else
+        {
+            target = player.transform.position;
+            canMove = true;
+        }
+    }
 
 	private void ChangeCameraPosition(){
 		switch(myDir){
@@ -118,18 +129,19 @@ public class Door : MonoBehaviour,IInteractable {
 				break;
 		}
 
-		target = otherDoor.transform.parent.transform.position;
+		target = otherDoor.transform.parent.parent.transform.position;
         canMove = true;
     }
     void Move()
     {
-        mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, .12f);
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -10);
-
-        if (Vector2.Distance(mainCamera.transform.position, target) <= .01f)
-        {
+        //mainCamera.transform.position = Vector2.Lerp(mainCamera.transform.position, target, .13f);
+        //mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -10);
+               
+        //if (Vector2.Distance(mainCamera.transform.position, target) <= .02f)
+        //{
             mainCamera.transform.position = new Vector3(target.x, target.y, mainCamera.transform.position.z);
             canMove = false;
-        }
+        transform.parent.parent.gameObject.SetActive(false);
+        //}
     }
 }

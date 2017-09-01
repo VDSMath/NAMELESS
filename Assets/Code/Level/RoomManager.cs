@@ -23,15 +23,22 @@ public class RoomManager : MonoBehaviour {
 	
     public void SwitchCurrentRoom(GameObject newRoom)
     {
-        currentRoom.GetComponent<Room>().Exit();
+        StopAllDoors();
 
+        currentRoom.GetComponent<Room>().Exit();
+       
         currentRoom = newRoom;
 
         currentRoom.GetComponent<Room>().Enter();
     }
 
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void StopAllDoors()
+    {
+        Room[] rooms = GetComponentsInChildren<Room>();
+
+        foreach(Room r in rooms)
+        {
+            r.StopDoors();
+        }
+    }
 }
